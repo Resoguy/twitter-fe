@@ -1,0 +1,11 @@
+$primary: #25274D;
+$secondary: #464866;
+$accent: #2E9CCA;
+$grey: #AAABB8;
+$cloudy: #29648A;
+$white: #fff;
+
+@mixin container {
+    max-width: 1200px;
+    margin: auto;
+}

@@ -1,0 +1,9 @@
+@import '../../../assets/styles/main';
+
+
+.card {
+    border-color: $secondary;
+    box-shadow: $shadow;
+    padding: $lg-space;
+    border-radius: $radius;
+}

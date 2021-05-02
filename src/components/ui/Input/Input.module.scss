@@ -1,0 +1,26 @@
+@import '../../../assets/styles/main';
+
+.formGroup {
+    margin: $md-space 0;
+
+    label {
+        display: block;
+        margin-bottom: $xs-space;
+    }
+
+    input {
+        border-radius: $radius;
+        border: 1px solid $secondary;
+        outline: none;
+        padding: $sm-space;
+
+        &:focus {
+            border-color: $accent;
+        }
+    }
+
+    .block {
+        width: 100%;
+        display: block;
+    }
+}

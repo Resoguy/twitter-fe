@@ -1,0 +1,40 @@
+@import '../../assets/styles/main';
+
+
+.toolbar {
+    background-color: $primary;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: $shadow;
+
+    .brandLogo, .toolbarLink {
+        text-decoration: none;
+        padding: $md-space $xl-space;
+        color: $white;
+        transition: 150ms ease-in-out;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            background-color: $secondary;
+        }
+    }
+
+    .brandLogo {
+        font-size: $font-lg;
+        font-weight: $font-bold;
+    }
+
+    .toolbarList {
+        list-style-type: none;
+        display: flex;
+
+        .toolbarItem {
+            display: flex;
+
+            .toolbarLink {
+
+            }
+        }
+    }
+}

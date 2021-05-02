@@ -1,0 +1,14 @@
+@import '../../../assets/styles/main';
+
+.button {
+    border-radius: $radius;
+    border: none;
+    padding: $md-space $xl-space;
+    background-color: $primary;
+    color: $white;
+    transition: $transition;
+
+    &:hover {
+        background-color: $secondary;
+    }
+}
