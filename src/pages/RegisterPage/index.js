@@ -1,9 +1,8 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {setJwt, setUser} from '../../store/actionCreators';
 import {Card, Button, Input} from '../../components/ui';
-import {register} from '../../api';
+import {register} from '../../store/thunks';
 import s from './RegisterPage.module.scss';
 
 
@@ -11,7 +10,8 @@ class RegisterPage extends React.Component {
     state = {
         username: '',
         email: '',
-        password: ''
+        password: '',
+        isLoading: false
     }
 
     setUsername = (event) => {
@@ -28,6 +28,7 @@ class RegisterPage extends React.Component {
 
     register = async (event) => {
         event.preventDefault();
+        this.setState({isLoading: true});
 
         const {username, email, password} = this.state;
         const registerForm = {
@@ -35,22 +36,21 @@ class RegisterPage extends React.Component {
             email,
             password
         }
+        const successCb = () => {
+            this.setState({
+                username: '',
+                email: '',
+                password: '',
+                isLoading: false
+            });
+            this.props.history.replace('/');
+        }
 
-        const {data} = await register(registerForm);
-
-        this.props.dispatch(setUser(data.user));
-        this.props.dispatch(setJwt(data.jwt));
-        this.setState({
-            username: '',
-            email: '',
-            password: ''
-        });
-
-        this.props.history.replace('/');
+        this.props.register(registerForm, successCb);
     }
 
     render() {
-        const {username, email, password} = this.state;
+        const {username, email, password, isLoading} = this.state;
 
         return (
             <div>
@@ -86,7 +86,7 @@ class RegisterPage extends React.Component {
                                 placeholder="Enter your password..."
                                 block />
 
-                            <Button type="submit">
+                            <Button type="submit" loading={isLoading}>
                                 Register
                             </Button>
 
@@ -105,4 +105,8 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(RegisterPage));
+const mapDispatchToProps = {
+    register
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RegisterPage));

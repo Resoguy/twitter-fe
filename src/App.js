@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
@@ -10,31 +11,41 @@ import {
   RegisterPageComponent
 } from './pages';
 import Toolbar from './components/Toolbar';
+import {tryLogin} from './store/thunks';
 
+class App extends React.Component {
+  componentDidMount() {
+    this.props.tryLogin();
+  }
 
-function App() {
-  return (
-    <Router>
-      <div>
-        <Toolbar />
-
-        <Switch>
-          <Route path="/" exact>
-            <HomePageComponent />
-          </Route>
-
-          <Route path="/login">
-            <LoginPageComponent />
-          </Route>
-
-          <Route path="/register">
-            <RegisterPageComponent />
-          </Route>
-        </Switch>
-        
-      </div>
-    </Router>
-  );
+  render() {
+    return (
+      <Router>
+        <div>
+          <Toolbar />
+  
+          <Switch>
+            <Route path="/" exact>
+              <HomePageComponent />
+            </Route>
+  
+            <Route path="/login">
+              <LoginPageComponent />
+            </Route>
+  
+            <Route path="/register">
+              <RegisterPageComponent />
+            </Route>
+          </Switch>
+          
+        </div>
+      </Router>
+    );
+  }
 }
 
-export default App;
+const mapDispatchToProps = {
+  tryLogin
+}
+
+export default connect(null, mapDispatchToProps)(App);

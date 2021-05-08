@@ -1,3 +1,6 @@
+import {SET_USER, SET_JWT} from '../actionTypes';
+
+
 const INITIAL_STATE = {
     user: null,
     jwt: null
@@ -6,10 +9,10 @@ const INITIAL_STATE = {
 const authReducer = (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
-        case 'SET_USER':
+        case SET_USER:
             return {...state, user: action.payload};
 
-        case 'SET_JWT':
+        case SET_JWT:
             return {...state, jwt: action.payload};
     
         default:

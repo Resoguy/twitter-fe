@@ -1,4 +1,5 @@
-import {combineReducers, createStore} from 'redux';
+import {combineReducers, createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import authReducer from './reducers/authReducer';
 import twitsReducer from './reducers/twitsReducer';
 
@@ -7,6 +8,8 @@ const reducer = combineReducers({
     twits: twitsReducer
 });
 
-const store = createStore(reducer);
+const middlewares = applyMiddleware(thunk);
+
+const store = createStore(reducer, middlewares);
 
 export default store;

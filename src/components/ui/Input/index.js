@@ -9,7 +9,8 @@ const Input = ({
     name, 
     value, 
     onChange, 
-    block = false
+    block = false,
+    error = false
 }) => (
     <div className={s.formGroup}>
         <label>
@@ -17,7 +18,7 @@ const Input = ({
         </label>
 
         <input
-            className={block ? s.block : ''}
+            className={`${block ? s.block : ''} ${error ? s.error : ''}`}
             type={type}
             name={name}
             placeholder={placeholder}

@@ -11,4 +11,9 @@
     &:hover {
         background-color: $secondary;
     }
+
+    &:disabled, .loading {
+        opacity: 0.5;
+        pointer-events: none;
+    }
 }

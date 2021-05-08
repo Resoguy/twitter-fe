@@ -1,77 +1,93 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Card, Button, Input} from '../../components/ui';
-import {login} from '../../api';
-import {setJwt, setUser} from '../../store/actionCreators';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import {Card, Button, Input, ErrorText} from '../../components/ui';
+import {login} from '../../store/thunks';
 import s from './LoginPage.module.scss';
 
 
 class LoginPage extends React.Component {
     state = {
-        identifier: '',
-        password: ''
+        isLoading: false
     }
 
-    setIdentifier = (event) => {
-        this.setState({identifier: event.target.value});
-    }
-
-    setPassword = (event) => {
-        this.setState({password: event.target.value});
-    }
-
-    login = async (event) => {
-        event.preventDefault();
-
-        const {identifier, password} = this.state;
-        const loginForm = {
-            identifier,
-            password
+    login = async (formValues) => {
+        this.setState({isLoading: true});
+        const successCb = () => {
+            this.setState({
+                identifier: '',
+                password: '',
+                isLoading: false
+            });
+            this.props.history.replace('/');
         }
-        const {data} = await login(loginForm);
 
-        this.props.dispatch(setUser(data.user));
-        this.props.dispatch(setJwt(data.jwt));
-        this.setState({
-            identifier: '',
-            password: ''
-        });
-        this.props.history.replace('/');
+        this.props.login(formValues, successCb);
+    }
+
+    loginValidator = (values) => {
+        const errors = {};
+
+        if (values.identifier.length < 3) {
+            errors.identifier = 'Min character length is 3.';
+        }
+
+        if (values.password.length < 6) {
+            errors.password = 'Min char length is 6';
+        }
+
+        return errors;
     }
 
     render() {
-        const {identifier, password} = this.state;
+        const {isLoading} = this.state;
 
         return (
             <div>
                 <div className={s.formWrapper}>
                     <Card>
                         <h1>Login Form</h1>
-                        <form onSubmit={this.login}>
 
-                            <Input
-                                name="identifier"
-                                label="Email or Username"
-                                placeholder="Enter your email or username..."
-                                value={identifier}
-                                onChange={this.setIdentifier}
-                                block />
+                        <Formik 
+                            initialValues={{
+                                identifier: '',
+                                password: ''
+                            }}
+                            validate={this.loginValidator}
+                            onSubmit={this.login} >
+                                {({errors, touched}) =>
+                                    <Form>
+                                        {console.log({touched})}
+                                        <Field 
+                                            as={Input}
+                                            name="identifier"
+                                            label="Email or Username"
+                                            placeholder="Enter your email or username"
+                                            error={errors.identifier && touched.identifier}
+                                            block />
 
-                            <Input
-                                name="password"
-                                type="password"
-                                label="Password"
-                                placeholder="Enter your password..."
-                                value={password}
-                                onChange={this.setPassword}
-                                block />
+                                        <ErrorMessage name="identifier" component={ErrorText} />
 
-                            <Button type="submit">
-                                Login
-                            </Button>
+                                        <Field 
+                                            as={Input}
+                                            name="password"
+                                            type="password"
+                                            label="Password"
+                                            error={errors.password && touched.password}
+                                            placeholder="Enter your password..."
+                                            block />
 
-                        </form>
+                                        <ErrorMessage name="password" component={ErrorText} />
+
+                                        <Button 
+                                            type="submit" 
+                                            loading={isLoading}>
+                                            Login
+                                        </Button>
+                                    </Form>
+                                }
+                        </Formik>
                     </Card>
                 </div>
             </div>
@@ -86,4 +102,8 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(LoginPage));
+const mapDispatchToProps = {
+    login
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LoginPage));
