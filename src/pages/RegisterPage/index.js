@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Formik, Form, Field} from 'formik';
 import * as yup from 'yup';
 import {Card, Button, Input} from '../../components/ui';
-import {register} from '../../store/thunks';
+import {register} from '../../store/thunks/auth';
 import s from './RegisterPage.module.scss';
 
 const registerSchema = yup.object().shape({

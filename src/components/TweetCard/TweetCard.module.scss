@@ -1,0 +1,23 @@
+@import '../../assets/styles/main';
+
+
+.tweetCard {
+    margin: $md-space 0;
+}
+
+.contentWrapper {
+    margin-left: $md-space;
+    flex: 1;
+
+    .contentHeader {
+        margin-bottom: $sm-space;
+    }
+
+    .contentBody {
+        margin-bottom: $sm-space;
+    }
+
+    .contentActions {
+        display: flex;
+    }
+}

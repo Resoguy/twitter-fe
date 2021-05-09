@@ -12,3 +12,11 @@ export const register = (registerData) => {
 export const fetchMe = () => {
     return axios.get('/users/me');
 }
+
+export const fetchFeed = () => {
+    return axios.get('/tweets?_sort=created_at:desc');
+}
+
+export const sendTweet = (values) => {
+    return axios.post('/tweets', values);
+}

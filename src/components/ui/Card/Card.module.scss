@@ -6,4 +6,8 @@
     box-shadow: $shadow;
     padding: $lg-space;
     border-radius: $radius;
+
+    &.flex {
+        display: flex;
+    }
 }

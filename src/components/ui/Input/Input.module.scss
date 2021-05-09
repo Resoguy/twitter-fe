@@ -3,12 +3,16 @@
 .formGroup {
     margin: $md-space 0;
 
+    &.marginless {
+        margin: 0;
+    }
+
     label {
         display: block;
         margin-bottom: $xs-space;
     }
 
-    input {
+    input, textarea {
         border-radius: $radius;
         border: 1px solid $secondary;
         outline: none;
@@ -17,6 +21,10 @@
         &:focus {
             border-color: $accent;
         }
+    }
+
+    textarea {
+        resize: none;
     }
 
     .block {

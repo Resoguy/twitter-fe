@@ -1,12 +1,12 @@
 const INITIAL_STATE = {
-    twits: []
+    feed: []
 }
 
 const twitsReducer = (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
-        case 'SET_TWITS':
-            return {...state, twits: action.payload};
+        case 'SET_FEED':
+            return {...state, feed: action.payload};
     
         default:
             return state;

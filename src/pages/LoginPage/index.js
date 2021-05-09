@@ -1,9 +1,9 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {Card, Button, Input, ErrorText} from '../../components/ui';
-import {login} from '../../store/thunks';
+import {Formik, Form, Field} from 'formik';
+import {Card, Button, Input} from '../../components/ui';
+import {login} from '../../store/thunks/auth';
 import s from './LoginPage.module.scss';
 import * as yup from 'yup';
 

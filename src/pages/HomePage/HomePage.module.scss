@@ -1,0 +1,33 @@
+@import '../../assets/styles/main';
+
+.container {
+    @include container;
+    display: flex;
+
+    .leftContent {
+        flex-basis: 300px;
+    }
+
+    .mainContent {
+        flex: 1;
+
+        .mainHeader {
+            padding: $md-space 0;
+        }
+    }
+
+    .rightContent {
+        flex-basis: 400px;
+    }
+}
+
+.tweetFormWrapper {
+    .formContent {
+        margin-left: $sm-space;
+        flex: 1;
+
+        .formBody {
+            margin-bottom: $sm-space;
+        }
+    }
+}

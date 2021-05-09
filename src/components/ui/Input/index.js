@@ -12,22 +12,41 @@ const Input = ({
     value, 
     onChange, 
     block = false,
-    error = false
+    error = false,
+    marginless = false,
+    cols = 30,
+    rows = 5
 }) => (
-    <div className={s.formGroup}>
-        <label>
-            {label}
-        </label>
+    <div className={`${s.formGroup} ${marginless ? s.marginless : ''}`}>
+        {
+            label &&
+            <label>
+                {label}
+            </label>
+        }
 
-        <input
-            className={`${block ? s.block : ''} ${error ? s.error : ''}`}
-            type={type}
-            name={name}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange} />
+        {
+            type === 'textarea' ?
+            <textarea
+                className={`${block ? s.block : ''} ${error ? s.error : ''}`}
+                type={type}
+                name={name}
+                cols={cols}
+                rows={rows}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}>
+            </textarea> :
+            <input
+                className={`${block ? s.block : ''} ${error ? s.error : ''}`}
+                type={type}
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange} />
+        }
 
-        <ErrorMessage name={name} component={ErrorText} />
+        {name && <ErrorMessage name={name} component={ErrorText} />}
     </div>
 )
 

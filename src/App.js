@@ -14,7 +14,7 @@ import {
 import Toolbar from './components/Toolbar';
 import PublicRoute from './guards/PublicRoute';
 import PrivateRoute from './guards/PrivateRoute';
-import {tryLogin} from './store/thunks';
+import {tryLogin} from './store/thunks/auth';
 
 class App extends React.Component {
   componentDidMount() {

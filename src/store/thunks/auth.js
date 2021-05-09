@@ -1,4 +1,4 @@
-import {setUser, setJwt} from '../actionCreators';
+import {setUser, setJwt} from '../actionCreators/auth';
 import * as api from '../../api';
 
 
@@ -29,7 +29,7 @@ export const tryLogin = () => async (dispatch) => {
 
     if (!jwt) return;
 
-    const {data} = await api.fetchMe()
+    const {data} = await api.fetchMe();
 
     dispatch(setUser(data));
     dispatch(setJwt(jwt));
