@@ -1,56 +1,38 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {Formik, Form, Field} from 'formik';
+import * as yup from 'yup';
 import {Card, Button, Input} from '../../components/ui';
 import {register} from '../../store/thunks';
 import s from './RegisterPage.module.scss';
 
+const registerSchema = yup.object().shape({
+    username: yup.string().required().min(3),
+    email: yup.string().required().email(),
+    password: yup.string().required().min(8)
+});
+
 
 class RegisterPage extends React.Component {
     state = {
-        username: '',
-        email: '',
-        password: '',
         isLoading: false
     }
 
-    setUsername = (event) => {
-        this.setState({username: event.target.value});
-    }
-
-    setEmail = (event) => {
-        this.setState({email: event.target.value});
-    }
-
-    setPassword = (event) => {
-        this.setState({password: event.target.value});
-    }
-
-    register = async (event) => {
-        event.preventDefault();
+    register = async (formValues, {resetForm}) => {
         this.setState({isLoading: true});
 
-        const {username, email, password} = this.state;
-        const registerForm = {
-            username,
-            email,
-            password
-        }
         const successCb = () => {
-            this.setState({
-                username: '',
-                email: '',
-                password: '',
-                isLoading: false
-            });
+            resetForm();
+            this.setState({isLoading: false});
             this.props.history.replace('/');
         }
 
-        this.props.register(registerForm, successCb);
+        this.props.register(formValues, successCb);
     }
 
     render() {
-        const {username, email, password, isLoading} = this.state;
+        const {isLoading} = this.state;
 
         return (
             <div>
@@ -58,39 +40,50 @@ class RegisterPage extends React.Component {
                     <Card>
                         <h1>Register Form</h1>
 
-                        <form onSubmit={this.register}>
+                        <Formik
+                            initialValues={{
+                                username: '',
+                                email: '',
+                                password: ''
+                            }}
+                            validationSchema={registerSchema}
+                            onSubmit={this.register} >
 
-                            <Input 
-                                name="username"
-                                label="Username"
-                                value={username}
-                                onChange={this.setUsername}
-                                placeholder="Enter your username..."
-                                block />
+                            {({errors, touched}) => (
+                                <Form>
+                                    <Field
+                                        as={Input}
+                                        name="username"
+                                        label="Username"
+                                        placeholder="Enter your username..."
+                                        error={errors.username && touched.username}
+                                        block />
 
-                            <Input
-                                name="email"
-                                type="email"
-                                label="Email"
-                                value={email}
-                                onChange={this.setEmail}
-                                placeholder="Enter your email..."
-                                block />
+                                    <Field
+                                        as={Input}
+                                        name="email"
+                                        type="email"
+                                        label="Email"
+                                        placeholder="Enter your email..."
+                                        error={errors.email && touched.email}
+                                        block />
 
-                            <Input
-                                name="password"
-                                type="password"
-                                label="Password"
-                                value={password}
-                                onChange={this.setPassword}
-                                placeholder="Enter your password..."
-                                block />
+                                    <Field
+                                        as={Input}
+                                        name="password"
+                                        type="password"
+                                        label="Password"
+                                        placeholder="Enter your password..."
+                                        error={errors.password && touched.password}
+                                        block />
 
-                            <Button type="submit" loading={isLoading}>
-                                Register
-                            </Button>
+                                    <Button type="submit" loading={isLoading}>
+                                        Register
+                                    </Button>
 
-                        </form>
+                                </Form>
+                            )}
+                        </Formik>
                     </Card>
                 </div>
             </div>

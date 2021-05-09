@@ -1,4 +1,6 @@
 import React from 'react';
+import {ErrorMessage} from 'formik';
+import {ErrorText} from '../index';
 import s from './Input.module.scss';
 
 
@@ -24,6 +26,8 @@ const Input = ({
             placeholder={placeholder}
             value={value}
             onChange={onChange} />
+
+        <ErrorMessage name={name} component={ErrorText} />
     </div>
 )
 

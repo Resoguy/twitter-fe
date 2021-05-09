@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch
 } from 'react-router-dom';
@@ -11,6 +12,8 @@ import {
   RegisterPageComponent
 } from './pages';
 import Toolbar from './components/Toolbar';
+import PublicRoute from './guards/PublicRoute';
+import PrivateRoute from './guards/PrivateRoute';
 import {tryLogin} from './store/thunks';
 
 class App extends React.Component {
@@ -26,16 +29,20 @@ class App extends React.Component {
   
           <Switch>
             <Route path="/" exact>
+              <Redirect to="/home" />
+            </Route>
+
+            <PrivateRoute path="/home" exact>
               <HomePageComponent />
-            </Route>
+            </PrivateRoute>
   
-            <Route path="/login">
+            <PublicRoute path="/login">
               <LoginPageComponent />
-            </Route>
+            </PublicRoute>
   
-            <Route path="/register">
+            <PublicRoute path="/register">
               <RegisterPageComponent />
-            </Route>
+            </PublicRoute>
           </Switch>
           
         </div>

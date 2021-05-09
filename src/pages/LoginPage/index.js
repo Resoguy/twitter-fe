@@ -5,6 +5,16 @@ import {Formik, Form, Field, ErrorMessage} from 'formik';
 import {Card, Button, Input, ErrorText} from '../../components/ui';
 import {login} from '../../store/thunks';
 import s from './LoginPage.module.scss';
+import * as yup from 'yup';
+
+const loginSchema = yup.object().shape({
+    identifier: yup.string()
+                    .required('This is a required field')
+                    .min(3, 'Must be min 3 characters.'),
+    password: yup.string()
+                    .required('This is a required field')
+                    .min(8, 'Must be min 8 characters.')
+});
 
 
 class LoginPage extends React.Component {
@@ -12,32 +22,16 @@ class LoginPage extends React.Component {
         isLoading: false
     }
 
-    login = async (formValues) => {
+    login = async (formValues, {resetForm}) => {
         this.setState({isLoading: true});
+
         const successCb = () => {
-            this.setState({
-                identifier: '',
-                password: '',
-                isLoading: false
-            });
+            resetForm();
+            this.setState({isLoading: false});
             this.props.history.replace('/');
         }
 
         this.props.login(formValues, successCb);
-    }
-
-    loginValidator = (values) => {
-        const errors = {};
-
-        if (values.identifier.length < 3) {
-            errors.identifier = 'Min character length is 3.';
-        }
-
-        if (values.password.length < 6) {
-            errors.password = 'Min char length is 6';
-        }
-
-        return errors;
     }
 
     render() {
@@ -54,11 +48,10 @@ class LoginPage extends React.Component {
                                 identifier: '',
                                 password: ''
                             }}
-                            validate={this.loginValidator}
+                            validationSchema={loginSchema}
                             onSubmit={this.login} >
                                 {({errors, touched}) =>
                                     <Form>
-                                        {console.log({touched})}
                                         <Field 
                                             as={Input}
                                             name="identifier"
@@ -66,8 +59,6 @@ class LoginPage extends React.Component {
                                             placeholder="Enter your email or username"
                                             error={errors.identifier && touched.identifier}
                                             block />
-
-                                        <ErrorMessage name="identifier" component={ErrorText} />
 
                                         <Field 
                                             as={Input}
@@ -77,8 +68,6 @@ class LoginPage extends React.Component {
                                             error={errors.password && touched.password}
                                             placeholder="Enter your password..."
                                             block />
-
-                                        <ErrorMessage name="password" component={ErrorText} />
 
                                         <Button 
                                             type="submit" 
