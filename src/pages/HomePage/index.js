@@ -72,7 +72,7 @@ class HomePage extends React.Component {
                                                     <div className={s.formActions}>
                                                         <Button type="submit" loading={isSubmitting}>
                                                             Tweet
-                                                    </Button>
+                                                        </Button>
                                                     </div>
                                                 </Form>
                                             )

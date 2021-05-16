@@ -20,3 +20,11 @@ export const fetchFeed = () => {
 export const sendTweet = (values) => {
     return axios.post('/tweets', values);
 }
+
+export const likeTweet = (newLike) => {
+    return axios.post('/likes', newLike);
+}
+
+export const unlikeTweet = (likeId) => {
+    return axios.delete(`/likes/${likeId}`);
+}

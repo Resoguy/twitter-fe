@@ -1,0 +1,23 @@
+@import '../../../assets/styles/main';
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($primary, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modalWrapper {
+
+    }
+
+    .closeBtn {
+        position: absolute;
+        left: $md-space;
+        top: $md-space;
+    }
+}

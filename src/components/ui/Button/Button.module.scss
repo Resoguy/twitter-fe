@@ -7,6 +7,10 @@
     background-color: $primary;
     color: $white;
     transition: $transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 
     &:hover {
         background-color: $secondary;
@@ -15,5 +19,15 @@
     &:disabled, .loading {
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    &.iconBtn {
+        padding: $md-space;
+        border-radius: 50%;
+        font-size: $font-sm;
+    }
+
+    .icon {
+        margin-right: $sm-space;
     }
 }

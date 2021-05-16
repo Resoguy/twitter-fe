@@ -1,3 +1,6 @@
+import {SET_FEED} from '../actionTypes';
+
+
 const INITIAL_STATE = {
     feed: []
 }
@@ -5,7 +8,7 @@ const INITIAL_STATE = {
 const twitsReducer = (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
-        case 'SET_FEED':
+        case SET_FEED:
             return {...state, feed: action.payload};
     
         default:

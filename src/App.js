@@ -12,6 +12,7 @@ import {
   RegisterPageComponent
 } from './pages';
 import Toolbar from './components/Toolbar';
+import {Modal} from './components/ui';
 import PublicRoute from './guards/PublicRoute';
 import PrivateRoute from './guards/PrivateRoute';
 import {tryLogin} from './store/thunks/auth';
@@ -26,6 +27,8 @@ class App extends React.Component {
       <Router>
         <div>
           <Toolbar />
+
+          {this.props.isModalOpen && <Modal />}
   
           <Switch>
             <Route path="/" exact>
@@ -51,8 +54,12 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  isModalOpen: state.ui.isModalOpen
+})
+
 const mapDispatchToProps = {
   tryLogin
 }
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
