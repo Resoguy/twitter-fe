@@ -1,24 +1,8 @@
 @import '../../assets/styles/main';
 
-.container {
-    @include container;
-    display: flex;
 
-    .leftContent {
-        flex-basis: 300px;
-    }
-
-    .mainContent {
-        flex: 1;
-
-        .mainHeader {
-            padding: $md-space 0;
-        }
-    }
-
-    .rightContent {
-        flex-basis: 400px;
-    }
+.mainHeader {
+    padding: $md-space 0;
 }
 
 .tweetFormWrapper {
@@ -30,4 +14,9 @@
             margin-bottom: $sm-space;
         }
     }
+}
+
+.tweetLinkWrapper {
+    text-decoration: none;
+    color: $primary;
 }

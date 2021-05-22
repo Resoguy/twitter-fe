@@ -3,6 +3,10 @@
 
 .tweetCard {
     margin: $md-space 0;
+
+    &:hover {
+        background-color: darken($white, 5%);
+    }
 }
 
 .contentWrapper {

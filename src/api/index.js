@@ -28,3 +28,15 @@ export const likeTweet = (newLike) => {
 export const unlikeTweet = (likeId) => {
     return axios.delete(`/likes/${likeId}`);
 }
+
+export const replyTweet = (newComment) => {
+    return axios.post(`/comments`, newComment);
+}
+
+export const fetchTweetById = (tweetId) => {
+    return axios.get(`/tweets/${tweetId}`);
+}
+
+export const fetchCommentsByTweet = (tweetId) => {
+    return axios.get(`/comments?tweet=${tweetId}`);
+}

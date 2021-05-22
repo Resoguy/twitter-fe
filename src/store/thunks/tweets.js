@@ -1,4 +1,5 @@
 import {setFeed} from '../actionCreators/tweets';
+import {closeModal} from '../actionCreators/ui';
 import * as api from '../../api';
 
 
@@ -8,17 +9,16 @@ export const fetchFeed = () => async (dispatch) => {
     dispatch(setFeed(data));
 }
 
-export const sendTweet = (values, successCb) => async (dispatch) => {
+export const sendTweet = (values) => async (dispatch) => {
     await api.sendTweet(values);
 
     const {data} = await api.fetchFeed();
 
     dispatch(setFeed(data));
-    
-    if (successCb) successCb();
 }
 
 export const like = (tweetId) => async (dispatch, getState) => {
+    console.log('like start');
     const {auth} = getState();
 
     const newLike = {
@@ -38,4 +38,13 @@ export const unlike = (likeId) => async (dispatch) => {
     const {data} = await api.fetchFeed();
 
     dispatch(setFeed(data));
+}
+
+export const replyTweet = (newComment) => async (dispatch) => {
+    await api.replyTweet(newComment);
+
+    const {data} = await api.fetchFeed()
+
+    dispatch(setFeed(data));
+    dispatch(closeModal());
 }

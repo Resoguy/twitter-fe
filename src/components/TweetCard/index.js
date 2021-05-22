@@ -1,29 +1,47 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 import {FaHeart, FaComment, FaRetweet, FaShare} from 'react-icons/fa';
 import { Button, Card } from '../ui';
 import {like, unlike} from '../../store/thunks/tweets';
 import {openModal} from '../../store/actionCreators/ui';
+import CommentForm from '../CommentForm';
 import s from './TweetCard.module.scss';
 
+const withTweet = (WrappedComponent, {tweet, ...rest}) => () => <WrappedComponent tweet={tweet} {...rest} />
 
-const CommentForm = () => (
-    <div>
-        <h1>Comment Form</h1>
-    </div>
-)
 
-const TweetCard = ({tweet, like, unlike, myId, openModal}) => {
-    const likeByMe = tweet.likes.find(like => like.user === myId);
+const TweetCard = ({
+    tweet, 
+    onLike = () => null,
+    onComment = () => null,
+    like, 
+    unlike, 
+    myId, 
+    openModal, 
+    type = 'tweet'
+}) => {
+    const isTweetCard = type === 'tweet';
+    const likeByMe = isTweetCard && tweet.likes.find(like => like.user === myId);
 
-    const toggleLike = () => {
-        if (!likeByMe) return like(tweet.id);
+    const toggleLike = async (event) => {
+        event.preventDefault();
+        if (!isTweetCard) return;
 
-        unlike(likeByMe.id);
+        if (!likeByMe) {
+            await like(tweet.id);
+        } else {
+            await unlike(likeByMe.id);
+        }
+        
+        onLike();
     }
 
-    const openCommentModal = () => {
-        openModal(CommentForm);
+    const openCommentModal = (event) => {
+        event.preventDefault();
+        if (!isTweetCard) return;
+
+        openModal(withTweet(CommentForm, {tweet, onComment}));
     }
 
     return (
@@ -41,26 +59,29 @@ const TweetCard = ({tweet, like, unlike, myId, openModal}) => {
                     <p>{tweet.text}</p>
                 </div>
 
-                <div className={s.contentActions}>
-                    <div className={s.actionWrapper}>
-                        <Button icon={FaHeart} onClick={toggleLike} />
-                        <span>{tweet.likes.length}</span>
-                    </div>
+                {
+                    isTweetCard &&
+                    <div className={s.contentActions}>
+                        <div className={s.actionWrapper}>
+                            <Button icon={FaHeart} onClick={toggleLike} />
+                            <span>{tweet.likes.length}</span>
+                        </div>
 
-                    <div className={s.actionWrapper}>
-                        <Button icon={FaComment} onClick={openCommentModal} />
-                        <span>0</span>
-                    </div>
+                        <div className={s.actionWrapper}>
+                            <Button icon={FaComment} onClick={openCommentModal} />
+                            <span>{tweet.comments.length}</span>
+                        </div>
 
-                    <div className={s.actionWrapper}>
-                        <Button icon={FaRetweet} />
-                        <span>0</span>
-                    </div>
+                        <div className={s.actionWrapper}>
+                            <Button icon={FaRetweet} />
+                            <span>0</span>
+                        </div>
 
-                    <div className={s.actionWrapper}>
-                        <Button icon={FaShare} />
+                        <div className={s.actionWrapper}>
+                            <Button icon={FaShare} />
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </Card>
     )
