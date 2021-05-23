@@ -6,6 +6,17 @@
 }
 
 .tweetFormWrapper {
+    .formImgWrapper {
+        a {
+            display: flex;
+
+            .profileImg {
+                border-radius: 50%;
+                width: 42px;
+                height: 42px;
+            }
+        }
+    }
     .formContent {
         margin-left: $sm-space;
         flex: 1;
@@ -16,7 +27,6 @@
     }
 }
 
-.tweetLinkWrapper {
-    text-decoration: none;
-    color: $primary;
+.tweetLink {
+    cursor: pointer;
 }

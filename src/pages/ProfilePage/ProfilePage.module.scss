@@ -1,0 +1,23 @@
+@import '../../assets/styles/main';
+
+.profileImgWrapper {
+    flex-basis: 100px;
+}
+
+.profileInfoWrapper {
+    flex: 1;
+    margin-left: $md-space;
+}
+
+.editFormWrapper {
+    width: 400px;
+
+    .editImage {
+        width: 100px;
+        margin: auto;
+    }
+
+    .fileInput {
+        display: none;
+    }
+}

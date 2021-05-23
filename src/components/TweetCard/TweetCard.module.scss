@@ -7,6 +7,19 @@
     &:hover {
         background-color: darken($white, 5%);
     }
+
+    .profileLink {
+        display: flex;
+        cursor: pointer;
+    }
+
+    .imgWrapper {
+        .profileImg {
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+        }
+    }
 }
 
 .contentWrapper {
@@ -15,6 +28,10 @@
 
     .contentHeader {
         margin-bottom: $sm-space;
+
+        a:hover {
+            text-decoration: underline;
+        }
     }
 
     .contentBody {

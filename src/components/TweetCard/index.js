@@ -1,11 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {FaHeart, FaComment, FaRetweet, FaShare} from 'react-icons/fa';
 import { Button, Card } from '../ui';
 import {like, unlike} from '../../store/thunks/tweets';
 import {openModal} from '../../store/actionCreators/ui';
 import CommentForm from '../CommentForm';
+import {extractProfileImg} from '../../utils';
 import s from './TweetCard.module.scss';
 
 const withTweet = (WrappedComponent, {tweet, ...rest}) => () => <WrappedComponent tweet={tweet} {...rest} />
@@ -19,6 +20,7 @@ const TweetCard = ({
     unlike, 
     myId, 
     openModal, 
+    history,
     type = 'tweet'
 }) => {
     const isTweetCard = type === 'tweet';
@@ -38,21 +40,30 @@ const TweetCard = ({
     }
 
     const openCommentModal = (event) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (!isTweetCard) return;
 
         openModal(withTweet(CommentForm, {tweet, onComment}));
     }
 
+    const goToProfilePage = (event) => {
+        event.stopPropagation();
+        history.push(`/profile/${tweet.user.id}`);
+    }
+
     return (
         <Card className={s.tweetCard} flex>
             <div className={s.imgWrapper}>
-                <img src='https://unsplash.it/40/40' alt='profile' />
+                <div className={s.profileLink} role='link' onClick={goToProfilePage}>
+                    <img className={s.profileImg} src={extractProfileImg(tweet.user)} alt='profile' />
+                </div>
             </div>
 
             <div className={s.contentWrapper}>
                 <header className={s.contentHeader}>
-                    <h5>{tweet.user.username}</h5>
+                    <div className={s.profileLink} role='link' onClick={goToProfilePage}>
+                        <h5>{tweet.user.username}</h5>
+                    </div>
                 </header>
 
                 <div className={s.contentBody}>
@@ -97,4 +108,4 @@ const mapDispatchToProps = {
     openModal
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TweetCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TweetCard));

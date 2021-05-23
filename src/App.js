@@ -10,7 +10,8 @@ import {
   HomePageComponent, 
   LoginPageComponent, 
   RegisterPageComponent,
-  TweetDetailPageComponent
+  TweetDetailPageComponent,
+  ProfilePageComponent
 } from './pages';
 import Toolbar from './components/Toolbar';
 import {Modal} from './components/ui';
@@ -42,6 +43,10 @@ class App extends React.Component {
 
             <PrivateRoute path="/tweets/:id">
               <TweetDetailPageComponent />
+            </PrivateRoute>
+
+            <PrivateRoute path="/profile/:id">
+              <ProfilePageComponent />
             </PrivateRoute>
   
             <PublicRoute path="/login">

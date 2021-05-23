@@ -38,5 +38,25 @@ export const fetchTweetById = (tweetId) => {
 }
 
 export const fetchCommentsByTweet = (tweetId) => {
-    return axios.get(`/comments?tweet=${tweetId}`);
+    return axios.get(`/comments?tweet=${tweetId}&&_sort=created_at:desc`);
+}
+
+export const fetchProfileById = (userId) => {
+    return axios.get(`/users/${userId}`);
+}
+
+export const fetchTweetsByUser = (userId) => {
+    return axios.get(`/tweets?user=${userId}&&_sort=created_at:desc`);
+}
+
+export const postImage = (form) => {
+    return axios.post('/upload', form, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+
+export const editProfile = (userId, userData) => {
+    return axios.put(`/users/${userId}`, userData);
 }
