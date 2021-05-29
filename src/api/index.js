@@ -9,10 +9,6 @@ export const register = (registerData) => {
     return axios.post('/auth/local/register', registerData);
 }
 
-export const fetchMe = () => {
-    return axios.get('/users/me');
-}
-
 export const fetchFeed = () => {
     return axios.get('/tweets?_sort=created_at:desc');
 }
@@ -59,4 +55,12 @@ export const postImage = (form) => {
 
 export const editProfile = (userId, userData) => {
     return axios.put(`/users/${userId}`, userData);
+}
+
+export const follow = (newFollow) => {
+    return axios.post('/follows', newFollow);
+}
+
+export const unfollow = (followId) => {
+    return axios.delete(`/follows/${followId}`);
 }

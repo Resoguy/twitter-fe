@@ -2,17 +2,27 @@ import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
+import * as yup from 'yup';
 import { FaPen } from 'react-icons/fa';
 import TweetCard from '../../components/TweetCard';
 import { Button, Card, Image, Input } from '../../components/ui';
 import MainLayout from '../../layouts/MainLayout';
 import { fetchProfileById, fetchTweetsByUser, postImage, editProfile } from '../../api';
-import { openModal } from '../../store/actionCreators/ui';
+import { openModal, closeModal } from '../../store/actionCreators/ui';
+import {follow, unfollow} from '../../store/thunks/auth';
 import {extractProfileImg} from '../../utils';
 import s from './ProfilePage.module.scss';
 
 
-const EditForm = ({ user }) => {
+const editProfileSchema = yup.object().shape({
+    username: yup.string().required().min(3),
+    bio: yup.string().min(3),
+    location: yup.string().min(3),
+    website: yup.string().min(3),
+    dateOfBirth: yup.string().min(3)
+})
+
+const EditForm = ({ user, onComplete }) => {
     const fileInput = useRef(null);
     const [imgSrc, setImgSrc] = useState(extractProfileImg(user));
 
@@ -32,16 +42,24 @@ const EditForm = ({ user }) => {
         reader.readAsDataURL(file);
     }
 
-    const saveProfile = async () => {
-        const form = new FormData();
+    const saveProfile = async (values) => {
         const file = fileInput.current.files[0];
 
+        if (!file) {
+            console.log('No Image!', values)
+
+            await editProfile(user.id, values);
+            return onComplete()
+        }
+
+        const form = new FormData();
         form.append('files', file);
 
         const { data } = await postImage(form);
         const imgId = data[0].id;
 
-        await editProfile(user.id, { profileImg: imgId });
+        await editProfile(user.id, { profileImg: imgId, ...values });
+        onComplete();
     }
 
     return (
@@ -58,16 +76,18 @@ const EditForm = ({ user }) => {
 
             <Formik
                 initialValues={{
-                    username: '',
-                    bio: '',
-                    location: '',
-                    website: '',
-                    dateOfBirth: ''
-                }} >
-                {({ errors, touched, isSubmitting }) => (
-                    <>
+                    username: user.username || '',
+                    bio: user.bio || '',
+                    location: user.location || '',
+                    website: user.website || '',
+                    dateOfBirth: user.dateOfBirth || ''
+                }}
+                validationSchema={editProfileSchema}
+                onSubmit={saveProfile} >
+                {({ errors, touched, isSubmitting, handleSubmit }) => (
+                    <Form>
                         <div className={s.editForm}>
-                            <Form>
+                            <>
                                 <Field
                                     as={Input}
                                     name="username"
@@ -109,15 +129,14 @@ const EditForm = ({ user }) => {
                                     placeholder="Enter your username..."
                                     error={touched.dateOfBirth && errors.dateOfBirth}
                                     block />
-                            </Form>
+                            </>
                         </div>
-
 
 
                         <div className={s.editActions}>
                             <Button type="submit" loading={isSubmitting}>Save</Button>
                         </div>
-                    </>
+                    </Form>
                 )}
             </Formik>
         </div>
@@ -155,11 +174,32 @@ class ProfilePage extends React.Component {
     }
 
     openEditModal = () => {
-        this.props.openModal(withUser(EditForm, { user: this.state.profile }));
+        if (this.props.user.id !== this.state.profile.id) return;
+        
+        this.props.openModal(withUser(EditForm, { 
+            user: this.state.profile, 
+            onComplete: () => {
+                this.fetchProfile();
+                this.props.closeModal();
+            }
+        }));
+    }
+
+    toggleFollow = () => {
+        const followByMe = this.props.user.followings.find(follow => follow.following === this.state.profile.id);
+
+        if (followByMe) {
+            this.props.unfollow(followByMe.id);
+        } else {
+            this.props.follow(this.state.profile.id);
+        }
     }
 
     render() {
         const { profile, tweets } = this.state;
+        const {id: userId, followings: myFollowings} = this.props.user;
+        const isMyProfile = profile && userId === profile.id;
+        const isFollowedByMe = myFollowings && profile && !!myFollowings.find(follow => follow.following === profile.id);
 
         return (
             <MainLayout>
@@ -170,7 +210,7 @@ class ProfilePage extends React.Component {
                     <Card flex>
                         <div className={s.profileImgWrapper}>
                             <Image
-                                icon={FaPen}
+                                icon={isMyProfile && FaPen }
                                 src={extractProfileImg(profile)}
                                 onClick={this.openEditModal} />
                         </div>
@@ -178,6 +218,23 @@ class ProfilePage extends React.Component {
                         <div className={s.profileInfoWrapper}>
                             <h2>{profile.username}</h2>
                             <p>{profile.email}</p>
+                            <p>Bio: {profile.bio}</p>
+                            <p>Location: {profile.location}</p>
+                            <p>Website: {profile.website}</p>
+                        </div>
+
+                        <div>
+                            <Button 
+                                variant={isFollowedByMe ? 'outline' : 'normal'}
+                                onClick={() => {
+                                    isMyProfile ? this.openEditModal() : this.toggleFollow()
+                                }}>
+                                {
+                                    isMyProfile ?
+                                    'Edit' :
+                                    (isFollowedByMe ? 'Unfollow' : 'Follow')
+                                }
+                            </Button>
                         </div>
                     </Card>
                 }
@@ -200,7 +257,14 @@ class ProfilePage extends React.Component {
 }
 
 const mapDispatchToProps = {
-    openModal
+    openModal,
+    closeModal,
+    follow,
+    unfollow
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(ProfilePage));
+const mapStateToProps = state => ({
+    user: state.auth.user || {}
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProfilePage));

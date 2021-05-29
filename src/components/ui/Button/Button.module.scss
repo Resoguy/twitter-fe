@@ -2,19 +2,13 @@
 
 .button {
     border-radius: $radius;
-    border: none;
+    border: 1px solid transparent;
     padding: $md-space $xl-space;
-    background-color: $primary;
-    color: $white;
     transition: $transition;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-
-    &:hover {
-        background-color: $secondary;
-    }
 
     &:disabled, .loading {
         opacity: 0.5;
@@ -29,5 +23,25 @@
 
     .icon {
         margin-right: $sm-space;
+    }
+
+    &.normal {
+        background-color: $primary;
+        color: $white;
+
+        &:hover {
+            background-color: $secondary;
+        }
+    }
+
+    &.outline {
+        background-color: transparent;
+        border-color: $primary;
+        color: $primary;
+
+        &:hover {
+            background-color: $primary;
+            color: $white;
+        }
     }
 }

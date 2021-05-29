@@ -14,7 +14,7 @@ const Image = ({
             className={s.imgBtn} 
             role='button' 
             onClick={onClick}>
-            <Icon className={s.imgIcon} />
+            {Icon && <Icon className={s.imgIcon} />}
             <img
                 className={s.img}
                 src={src}
