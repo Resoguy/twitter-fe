@@ -1,0 +1,49 @@
+@import '../../assets/styles/main';
+
+
+.retweetWrapper {
+    width: 460px;
+
+    .tweetWrapper {
+        display: flex;
+        padding: $sm-space;
+
+        .profileImgWrapper {
+            flex-basis: 42px;
+
+            .profileImg {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+            }
+        }
+
+        .tweetBody {
+            flex-grow: 1;
+            margin-left: $md-space;
+
+            .tweetUser {
+                margin-bottom: $sm-space;
+            }
+
+            .tweetText {
+                margin-bottom: $xs-space;
+            }
+
+            .tweetImgWrapper {
+                border-radius: $radius;
+                overflow: hidden;
+                max-height: 250px;
+
+                .tweetImg {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+    }
+
+    .retweetForm {
+        margin: $md-space 0;
+    }
+}
