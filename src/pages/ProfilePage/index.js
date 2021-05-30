@@ -10,7 +10,7 @@ import MainLayout from '../../layouts/MainLayout';
 import { fetchProfileById, fetchTweetsByUser, postImage, editProfile } from '../../api';
 import { openModal, closeModal } from '../../store/actionCreators/ui';
 import {follow, unfollow} from '../../store/thunks/auth';
-import {extractProfileImg} from '../../utils';
+import {extractImageFromFile} from '../../utils';
 import s from './ProfilePage.module.scss';
 
 
@@ -24,7 +24,7 @@ const editProfileSchema = yup.object().shape({
 
 const EditForm = ({ user, onComplete }) => {
     const fileInput = useRef(null);
-    const [imgSrc, setImgSrc] = useState(extractProfileImg(user));
+    const [imgSrc, setImgSrc] = useState(extractImageFromFile(user.profileImg));
 
     const openInput = () => {
         fileInput.current.click();
@@ -71,6 +71,7 @@ const EditForm = ({ user, onComplete }) => {
                     className={s.fileInput}
                     name="img-input"
                     type="file"
+                    accept="image/*"
                     onChange={changeFile} />
             </div>
 
@@ -211,7 +212,7 @@ class ProfilePage extends React.Component {
                         <div className={s.profileImgWrapper}>
                             <Image
                                 icon={isMyProfile && FaPen }
-                                src={extractProfileImg(profile)}
+                                src={extractImageFromFile(profile.profileImg)}
                                 onClick={this.openEditModal} />
                         </div>
 

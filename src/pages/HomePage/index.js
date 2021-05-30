@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {FaImage} from 'react-icons/fa'
 import {withRouter, Link} from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
@@ -8,7 +9,8 @@ import TweetCard from '../../components/TweetCard';
 import { fetchFeed, sendTweet } from '../../store/thunks/tweets';
 import { Card, Button, Input } from '../../components/ui';
 import MainLayout from '../../layouts/MainLayout';
-import {extractProfileImg} from '../../utils';
+import {extractImageFromFile} from '../../utils';
+import {postImage} from '../../api';
 
 
 const tweetSchema = yup.object().shape({
@@ -18,16 +20,48 @@ const tweetSchema = yup.object().shape({
 
 
 class HomePage extends React.Component {
+    imageInputRef = null;
+    state = {
+        imagePreview: null
+    }
 
     componentDidMount() {
         this.props.fetchFeed();
         console.log(this.props.feed);
     }
 
+    openImageInput = () => {
+        this.imageInputRef.click();
+    }
+
+    changeImage = (file) => {
+        console.log(file);
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            this.setState({imagePreview: reader.result});
+        }
+
+        reader.readAsDataURL(file);
+    }
+
     sendTweet = async (values, { resetForm, setSubmitting }) => {
-        await this.props.sendTweet(values);
+        const {image, ...tweet} = values;
+
+        const form = new FormData();
+        form.append('files', image);
+
+        const {data} = await postImage(form);
+
+        const newTweet = {
+            ...tweet,
+            image: data[0].id
+        }
+
+        await this.props.sendTweet(newTweet);
 
         resetForm();
+        this.setState({imagePreview: null});
         setSubmitting(false);
     }
 
@@ -44,7 +78,7 @@ class HomePage extends React.Component {
                         <Card flex>
                             <div className={s.formImgWrapper}>
                                 <Link to={`/profile/${this.props.user.id}`}>
-                                    <img className={s.profileImg} src={extractProfileImg(this.props.user)} alt="profile" />
+                                    <img className={s.profileImg} src={extractImageFromFile(this.props.user.profileImg)} alt="profile" />
                                 </Link>
                             </div>
 
@@ -52,12 +86,13 @@ class HomePage extends React.Component {
                                 <Formik
                                     initialValues={{
                                         text: '',
-                                        user: this.props.user.id
+                                        user: this.props.user.id,
+                                        image: null
                                     }}
                                     validationSchema={tweetSchema}
                                     onSubmit={this.sendTweet}>
                                     {
-                                        ({ errors, touched, isSubmitting }) => (
+                                        ({ errors, touched, isSubmitting, setFieldValue }) => (
                                             <Form>
                                                 <div className={s.formBody}>
                                                     <Field
@@ -66,9 +101,38 @@ class HomePage extends React.Component {
                                                         name="text"
                                                         placeholder="Enter your Tweet"
                                                         error={errors.text && touched.text}
+                                                        rows="8"
                                                         block
                                                         marginless />
+
+                                                    <input 
+                                                        ref={el => this.imageInputRef = el}
+                                                        className={s.imageInput}
+                                                        type="file" 
+                                                        name="image"
+                                                        accept="image/*"
+                                                        onChange={event => {
+                                                            const file = event.target.files[0];
+
+                                                            setFieldValue('image', file);
+                                                            this.changeImage(file);
+                                                        }} />
+                                                        
+                                                    <Button 
+                                                        className={s.imageInputBtn} 
+                                                        icon={FaImage} 
+                                                        onClick={this.openImageInput} />
                                                 </div>
+
+                                                {
+                                                    this.state.imagePreview &&
+                                                    <div className={s.imagePreviewWrapper}>
+                                                        <img 
+                                                            className={s.imagePreview} 
+                                                            src={this.state.imagePreview} 
+                                                            alt="preview" />
+                                                    </div>
+                                                }
 
                                                 <div className={s.formActions}>
                                                     <Button type="submit" loading={isSubmitting}>

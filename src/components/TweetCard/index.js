@@ -6,7 +6,7 @@ import { Button, Card } from '../ui';
 import {like, unlike} from '../../store/thunks/tweets';
 import {openModal} from '../../store/actionCreators/ui';
 import CommentForm from '../CommentForm';
-import {extractProfileImg} from '../../utils';
+import {extractImageFromFile} from '../../utils';
 import s from './TweetCard.module.scss';
 
 const withTweet = (WrappedComponent, {tweet, ...rest}) => () => <WrappedComponent tweet={tweet} {...rest} />
@@ -27,7 +27,7 @@ const TweetCard = ({
     const likeByMe = isTweetCard && tweet.likes.find(like => like.user === myId);
 
     const toggleLike = async (event) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (!isTweetCard) return;
 
         if (!likeByMe) {
@@ -55,7 +55,7 @@ const TweetCard = ({
         <Card className={s.tweetCard} flex>
             <div className={s.imgWrapper}>
                 <div className={s.profileLink} role='link' onClick={goToProfilePage}>
-                    <img className={s.profileImg} src={extractProfileImg(tweet.user)} alt='profile' />
+                    <img className={s.profileImg} src={extractImageFromFile(tweet.user.profileImg)} alt='profile' />
                 </div>
             </div>
 
@@ -69,6 +69,16 @@ const TweetCard = ({
                 <div className={s.contentBody}>
                     <p>{tweet.text}</p>
                 </div>
+
+                {
+                    tweet.image &&
+                    <div className={s.tweetImgWrapper}>
+                        <img 
+                            className={s.tweetImg}
+                            src={extractImageFromFile(tweet.image, 'medium')}
+                            alt={tweet.image.name} />
+                    </div>
+                }
 
                 {
                     isTweetCard &&

@@ -23,6 +23,29 @@
 
         .formBody {
             margin-bottom: $sm-space;
+            position: relative;
+
+            .imageInput {
+                display: none;
+            }
+
+            .imageInputBtn {
+                position: absolute;
+                bottom: $xs-space;
+                left: $xs-space;
+            }
+        }
+
+        .imagePreviewWrapper {
+            max-height: 250px;
+            overflow: hidden;
+            margin-bottom: $sm-space;
+            border-radius: $radius;
+
+            .imagePreview {
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 }

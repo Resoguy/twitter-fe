@@ -38,6 +38,18 @@
         margin-bottom: $sm-space;
     }
 
+    .tweetImgWrapper {
+        max-height: 250px;
+        overflow: hidden;
+        border-radius: $radius;
+        margin-bottom: $sm-space;
+
+        .tweetImg {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
     .contentActions {
         display: flex;
 

@@ -1,8 +1,8 @@
 export const baseUrl = 'http://localhost:1337';
 
-export const extractProfileImg = (user) => {
+export const extractImageFromFile = (file, size = 'thumbnail') => {
     try {
-        const imgUrl = user.profileImg.formats.thumbnail.url;
+        const imgUrl = file.formats[size].url;
 
         return `${baseUrl}${imgUrl}`;
     } catch (err) {
